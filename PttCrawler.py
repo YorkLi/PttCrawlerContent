@@ -23,8 +23,11 @@ def getPageNumber(content) :
 
 # python PttCrawler.py Gossiping 2 
 if __name__ == "__main__":
+	argc=len(sys.argv)
 	Board = str(sys.argv[1])
 	ParsingPage = int(sys.argv[2])
+	if argc==4:
+		SearchWord = str(sys.argv[3])
 	print ('Start parsing ['+ Board +']....')
 	start_time = time.time()
 	rs = requests.session()
@@ -58,8 +61,13 @@ if __name__ == "__main__":
 		res = rs.get(URL, verify = False)
 		soup = BeautifulSoup(res.text, 'html.parser')
 		data = soup.select('.bbs-screen.bbs-content')[0].text
-		content += (data + strNext)
-		time.sleep(0.05) 
+		if argc == 4 :
+			if SearchWord in data:
+				content += (data + strNext)
+				time.sleep(0.05) 
+		else :
+			content += (data + strNext)
+			time.sleep(0.05)
 	with open(fileName,'wb') as f:
 		f.write( content.encode('utf8') )  
 
